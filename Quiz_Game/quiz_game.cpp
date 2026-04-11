@@ -2,7 +2,7 @@
 
 int main()
 {
-	char answer;
+	char user_answer;
 	int score = 0;
 
 	std::string questions[] = { "1. What year was C++ created?",
@@ -20,13 +20,6 @@ int main()
 	int questions_nbr = sizeof(questions)/sizeof(questions[0]);
 	int options_nbr = sizeof(options[0])/sizeof(options[0][0]);
 
-	//! algo:
-	//* loop over the questions
-	//* print the questions
-	//* print the options
-	//* check if the user's anser correct or not
-	//* calculate the total score (correct questions)
-
 	for (int i = 0; i < questions_nbr; i++)
 	{
 		std::cout << "**************************************\n";
@@ -37,24 +30,28 @@ int main()
 			std::cout << options[i][j] << '\n';
 		
 		std::cout << "Enter the correct answer: ";
-		std::cin >> answer;
-		answer = toupper(answer);
+		std::cin >> user_answer;
+		user_answer = toupper(user_answer);
 
-		if (answer == answerKey[i])
+		if (user_answer == answerKey[i])
 		{
-			std::cout << "Correct!\n";
+			std::cout << "CORRECT!\n";
 			score++;
 		}
 		else
-			std::cout << "Wrong!\n";
+		{
+			std::cout << "WRONG!\n";
+			std::cout << "Correct Answer is: " << answerKey[i] << '\n';
+		}
 
 	}
 
 	std::cout << "*************************************\n";
-	std::cout << " Your total correct answers is: " << (score/(float)questions_nbr)*100 << "%\n";
+	std::cout << "*              RESULTS              *\n";
 	std::cout << "*************************************\n";
+	std::cout << "Correct Guesses: " << score << '\n';
+	std::cout << "Number of questions: " << questions_nbr << '\n';
+	std::cout << "Your total correct answers is: " << (score / (float)questions_nbr) * 100 << "%\n";
 
 	return 0;
 }
-
-//! I think that I finish this code, just need to check it with 'Bro Code' to see if we miss something!
