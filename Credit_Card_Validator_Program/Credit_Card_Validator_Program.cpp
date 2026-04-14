@@ -6,26 +6,43 @@
 * 4. Sum results from steps 2 & 3
 * 5. If step 4 is divisble by 10, => is valid
 */
-//? I have a question, how we know that a credit card number is valid? is there a reference? or what?
 
 #include <iostream>
-#include <cstring>
-#include <cstdlib>
 
-int main(int argc, char *argv[])
+int getDigit(const int number)
 {
-	if (argc != 2)
-	{
-		std::cerr << "Invalide number of arguments!\n";
-		return 1;
-	}
+	return (number % 10 + (number / 10));
+}
 
-	for (int i = 0; i < (int)strlen(argv[1]); i+=2)
-	{
-		int tmp_digit = argv[1][i] - 48;
-		tmp_digit *= 2;
-	}
-	
+int sumOddDigits(const std::string cardNumber)
+{
+	int sum = 0;
+	for (size_t i = 1; i < cardNumber.length(); i += 2)
+		sum += getDigit(cardNumber[i] - 48);
+	return sum;
+}
+
+int sumEvenDigits(const std::string cardNumber)
+{
+	int sum = 0;
+	for (size_t i = 0; i < cardNumber.length(); i += 2)
+		sum += getDigit((cardNumber[i] - 48) * 2);
+	return sum;
+}
+
+int main()
+{
+	std::string cardNumber;
+	int result = 0;
+
+	std::cout << "Enter a credit Card Number: ";
+	std::cin >> cardNumber;
+
+	result = sumEvenDigits(cardNumber) + sumOddDigits(cardNumber);
+	if (result % 10 == 0)
+		std::cout << cardNumber << " is valid!\n";
+	else
+		std::cout << cardNumber << " is Not valid!\n";
 
 	return 0;
 }
