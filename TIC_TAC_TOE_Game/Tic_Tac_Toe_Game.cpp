@@ -1,15 +1,28 @@
 //! TIC TAC TOE Game:
 
 #include <iostream>
-// #include <ctime> //? I need it?
+#include <string>
+#include <cstdlib>
+#include <ctime>
 
 //* get palyer's choice
 void get_player_choice(char &player)
 {
+	std::string input;
+
 	do
 	{
 		std::cout << "Enter/choose 'X' or 'O'\n";
-		std::cin >> player; 
+		std::getline(std::cin, input);
+		if (std::cin.eof())
+		{
+			std::cout << "\nEOF detected. Exiting game.\n";
+			exit(0);
+		}
+		else if (input.length() == 1)
+			player = input[0];
+		else
+			player = ' ';
 	} while (player != 'X' && player != 'x' && player != 'O' && player != 'o');
 }
 
@@ -38,28 +51,56 @@ void draw_Board(char *spaces)
 	std::cout << '\n';
 }
 
+//* draw the first board tutorial:
+void draw_Board_tutorial(char *spaces)
+{
+	std::cout << '\n';
+	std::cout << "     |     |     " << '\n';
+	std::cout << "  1  |  2  |  3  " << '\n';
+	std::cout << "_____|_____|_____" << '\n';
+	std::cout << "     |     |     " << '\n';
+	std::cout << "  4  |  5  |  6  " << '\n';
+	std::cout << "_____|_____|_____" << '\n';
+	std::cout << "     |     |     " << '\n';
+	std::cout << "  7  |  8  |  9  " << '\n';
+	std::cout << "     |     |     " << '\n';
+	std::cout << '\n';
+}
+
 //* get player's new choice, and draw it in the board
 void player_Move(char *spaces, char player)
 {
+	std::string input;
 	int number = -1;
 
 	while (true)
 	{
 		std::cout << "Enter a spot to palce a marker (1-9): ";
-		std::cin >> number;
-		number--;
-		if (number >= 0 && number <= 8)
+		std::getline(std::cin, input);
+		if (std::cin.eof())
 		{
-			if (spaces[number] == ' ')
+			std::cout << "\nEOF detected. Exiting game.\n";
+            exit(0);
+		}
+		else if (input.length() == 1 && isdigit(input[0]))
+		{
+			number = input[0] - '0';
+			number--;
+			if (number >= 0 && number <= 8)
 			{
-				spaces[number] = player;
-				break;
+				if (spaces[number] == ' ')
+				{
+					spaces[number] = player;
+					break;
+				}
+				else
+					std::cerr << "this spot is Not valid!\n";
 			}
 			else
-				std::cerr << "this spot is Not valid!\n";
+				std::cerr << "Invalid number! (1-9)\n";
 		}
 		else
-			std::cerr << "Invalid number!\n";
+			std::cerr << "Invalid input! Please enter a number.\n";
 	}
 }
 
@@ -96,9 +137,9 @@ bool check_Winner(char *spaces, char palyer, char computer)
 	else if (spaces[0] != ' ' && spaces[0] == spaces[3] && spaces[3] == spaces[6])
 		spaces[0] == palyer ? std::cout << "You Win!\n" : std::cout << "You Lose!\n";
 	else if (spaces[1] != ' ' && spaces[1] == spaces[4] && spaces[4] == spaces[7])
-		spaces[6] == palyer ? std::cout << "You Win!\n" : std::cout << "You Lose!\n";
+		spaces[1] == palyer ? std::cout << "You Win!\n" : std::cout << "You Lose!\n";
 	else if (spaces[2] != ' ' && spaces[2] == spaces[5] && spaces[5] == spaces[8])
-		spaces[6] == palyer ? std::cout << "You Win!\n" : std::cout << "You Lose!\n";
+		spaces[2] == palyer ? std::cout << "You Win!\n" : std::cout << "You Lose!\n";
 	else
 		return false;
 	return true;
@@ -126,10 +167,11 @@ int main()
 	get_player_choice(player);
 	get_computer_choice(computer, player);
 
-	draw_Board(spaces); //todo: should we draw a toturial about the spats and there numbers
+	draw_Board_tutorial(spaces);
 	while (running)
 	{
 		player_Move(spaces, player);
+		std::cout << "You:\n";
 		draw_Board(spaces);
 		if (check_Winner(spaces, player, computer))
 		{
@@ -142,6 +184,7 @@ int main()
 			break;
 		}
 		computer_Move(spaces, computer);
+		std::cout << "Computer:\n";
 		draw_Board(spaces);
 		if (check_Winner(spaces, player, computer))
 		{
@@ -159,22 +202,3 @@ int main()
 
 	return 0;
 }
-
-/*
-todo: should we draw a toturial about the spats and there numbers
-* like this:
-*  _____ _____ _____
-* |     |     |     |
-* |  1  |  2  |  3  |
-* |_____|_____|_____|
-* |     |     |     |
-* |  4  |  5  |  6  |
-* |_____|_____|_____|
-* |     |     |     |
-* |  7  |  8  |  9  |
-* |_____|_____|_____|
-*
-*/
-
-//todo fix error in input like when the user hit enter! or ctr+D
-//todo add sentence that show that the computer play
